@@ -1,9 +1,8 @@
+
 const path = require('path');
 const fs = require("fs");
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
-const db = require('./db/db.json');
-console.log(db);
 
 // Sets up the Express App
 const app = express();
@@ -26,13 +25,14 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
     const body = { ...req.body };
     const data = JSON.parse(fs.readFileSync('./db/db.json', 'utf-8'));
-    body.id = uuidv4()
-    fs.writeFileSync('./db/db.json', JSON.stringify(data.concat(req.body), null, 2), 'utf-8');
-    res.send(req.body);
+    body.id = uuidv4();
+    fs.writeFileSync('./db/db.json', JSON.stringify(data.concat(body), null, 2), 'utf-8');
+    res.send(body);
 });
 
 
 app.delete('/api/notes/:id', (req, res) => {
+    console.log("test")
     const { id } = req.params;
     const data = JSON.parse(fs.readFileSync('./db/db.json', 'utf-8'));
     const items = data.filter((item) => item.id !== id);
